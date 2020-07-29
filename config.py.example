@@ -1,0 +1,22 @@
+# Extensions to be loaded
+extensions = [
+    "jishaku",
+    "essentials.error_handler",
+    "essentials.events",
+    "admin.admin",
+    "cogs.monitor",
+    "cogs.stalker",
+    "cogs.config",
+    "cogs.help",
+    "cogs.info"
+]
+
+db_engine = "postgresql"  # sqlit3 or postgresql is configured now. If you want to use other you have to configure yourself
+
+# Postgresql DB config
+db_config = {
+    "host": "localhost",
+    "database": "monitor",
+    "user": "shah",
+    "password": "shah",
+}

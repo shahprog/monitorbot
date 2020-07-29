@@ -1,0 +1,1 @@
+# A bot that monitors server members/bots. Good for bot developers for monitoring their bot
