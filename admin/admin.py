@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 
+
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -25,7 +26,9 @@ class Admin(commands.Cog):
             try:
                 cog = self.bot.cogs[command_or_cog]
             except:
-                return await ctx.send(f"No command or cog found with the name `{command_or_cog}`")
+                return await ctx.send(
+                    f"No command or cog found with the name `{command_or_cog}`"
+                )
 
             for command_or_group in cog.get_commands():
                 if isinstance(command_or_group, commands.group):
@@ -36,17 +39,17 @@ class Admin(commands.Cog):
                 if isinstance(command_or_group, commands.Command):
                     command_or_group.enabled = False
 
-            return await ctx.send(f'Cog {command_or_cog} has been disabled.')
+            return await ctx.send(f"Cog {command_or_cog} has been disabled.")
         else:
             if isinstance(cmd, commands.group):
                 for command in cmd:
                     command.enabled = False
                 cmd.enabled = False
-                what = 'Group'
+                what = "Group"
 
             if isinstance(cmd, commands.Command):
                 cmd.enabled = False
-            await ctx.send(f'{what} {cmd} has been disabled.')
+            await ctx.send(f"{what} {cmd} has been disabled.")
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -57,7 +60,9 @@ class Admin(commands.Cog):
             try:
                 cog = self.bot.cogs[command_or_cog]
             except:
-                return await ctx.send(f"No command or cog found with the name `{command_or_cog}`")
+                return await ctx.send(
+                    f"No command or cog found with the name `{command_or_cog}`"
+                )
 
             for command_or_group in cog.get_commands():
                 if isinstance(command_or_group, commands.group):
@@ -68,17 +73,18 @@ class Admin(commands.Cog):
                 if isinstance(command_or_group, commands.Command):
                     command_or_group.enabled = True
 
-            return await ctx.send(f'Cog {command_or_cog} has been disabled.')
+            return await ctx.send(f"Cog {command_or_cog} has been disabled.")
         else:
             if isinstance(cmd, commands.group):
                 for command in cmd:
                     command.enabled = True
                 cmd.enabled = True
-                what = 'Group'
+                what = "Group"
 
             if isinstance(cmd, commands.Command):
                 cmd.enabled = True
-            await ctx.send(f'{what} {cmd} has been disabled.')
+            await ctx.send(f"{what} {cmd} has been disabled.")
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))

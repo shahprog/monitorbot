@@ -14,7 +14,6 @@ os.environ["JISHAKU_NO_DM_TRACEBACK"] = "True"
 os.environ["JISHAKU_HIDE"] = "True"
 
 
-
 class MyBot(commands.AutoShardedBot):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
