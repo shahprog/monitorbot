@@ -84,7 +84,8 @@ async def create_db_pool():
 				guild BIGINT NOT NULL,
 				target BIGINT NOT NULL,
 				mentor BIGINT NOT NULL,
-				channel BIGINT NULL
+				channel BIGINT NULL,
+                last_update TIMESTAMP NULL
 			)
 		"""
         )
