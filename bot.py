@@ -84,25 +84,21 @@ async def create_db_pool():
 				target BIGINT NOT NULL,
 				mentor BIGINT NOT NULL,
 				channel BIGINT NULL,
-                last_update TIMESTAMP NULL
+                last_update TIMESTAMP NULL,
+                tz VARCHAR(100) NULL
 			)
 		"""
         )
-    elif db_engine == "sqlite3":
-        import aiosqlite
-
-        db_name = "anyname"
-        bot.db = await aiosqlite.connect(db_name + ".db")
 
         await bot.db.execute(
             """
-			CREATE TABLE IF NOT EXISTS guild_data(
-				id INTEGER PRIMARY KEY NOT NULL,
-				guild INT NOT NULL,
-				prefix TEXT NOT NULL
-			)
-		"""
-        )
+            CREATE TABLE IF NOT EXISTS user_tz(
+                id SERIAL PRIMARY KEY NOT NULL,
+                userid BIGINT NOT NULL,
+                tz VARCHAR(100) NOT NULL
+                )
+            """
+            )
 
 
 bot.loop.run_until_complete(create_db_pool())
