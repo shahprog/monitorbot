@@ -42,7 +42,7 @@ class MyHelpCommand(commands.HelpCommand):
 
         msg = ""
         msg += f"__{cog.qualified_name}__\n"
-        msg += f"`{cog.description}`\n"
+        msg += f"{cog.description}\n\n"
 
         for command in cog.get_commands():
             if isinstance(command, commands.Group):
