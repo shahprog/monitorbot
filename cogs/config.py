@@ -36,16 +36,26 @@ class Config(commands.Cog):
         try:
             pytz.timezone(timezone)
         except pytz.UnknownTimeZoneError:
-            return await ctx.send("Invalid timezone. List of valid timezone <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>")
+            return await ctx.send(
+                "Invalid timezone. List of valid timezone <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>"
+            )
 
-        data = await self.bot.db.fetchrow("SELECT * FROM user_tz WHERE userid = $1", ctx.author.id)
+        data = await self.bot.db.fetchrow(
+            "SELECT * FROM user_tz WHERE userid = $1", ctx.author.id
+        )
 
         if data:
-            await self.bot.db.execute("UPDATE user_tz SET tz=$1 WHERE id=$2", timezone, data['id'])
+            await self.bot.db.execute(
+                "UPDATE user_tz SET tz=$1 WHERE id=$2", timezone, data["id"]
+            )
         else:
-            await self.bot.db.execute("INSERT INTO user_tz(userid, tz) VALUES($1, $2)", ctx.author.id, timezone)
+            await self.bot.db.execute(
+                "INSERT INTO user_tz(userid, tz) VALUES($1, $2)",
+                ctx.author.id,
+                timezone,
+            )
 
-        await ctx.send('Timezone updated successfully.')
+        await ctx.send("Timezone updated successfully.")
 
 
 def setup(bot):

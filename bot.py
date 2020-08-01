@@ -98,7 +98,7 @@ async def create_db_pool():
                 tz VARCHAR(100) NOT NULL
                 )
             """
-            )
+        )
 
 
 bot.loop.run_until_complete(create_db_pool())

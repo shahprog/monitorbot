@@ -11,7 +11,7 @@ extensions = [
     "cogs.info"
 ]
 
-db_engine = "postgresql"  # sqlit3 or postgresql is configured now. If you want to use other you have to configure yourself
+db_engine = "postgresql"  # sqlite3 or postgresql is configured now. If you want to use other you have to configure yourself
 
 # Postgresql DB config
 db_config = {

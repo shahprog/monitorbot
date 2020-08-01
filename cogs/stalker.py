@@ -17,23 +17,24 @@ class Stalker(commands.Cog):
             "online": 0x00FF80,
             "idle": 0xF1CB02,
             "offline": 0xB6B6B6,
-            "dnd": 0xF96A4B
+            "dnd": 0xF96A4B,
         }
 
     async def notify(self, status_from, status_to, row):
         guild: discord.Guild = self.bot.get_guild(row["guild"])
         mentor: discord.Member = guild.get_member(row["mentor"])
         target: discord.Member = guild.get_member(row["target"])
-        channel: discord.TextChannel = discord.utils.get(guild.text_channels, id=row["channel"])  # can be null
-        last: datetime.datetime = row["last_update"]  # last status update datetime can be null
-        last_tz: datetime.datetime = row["last_update_tz"]  # last status update datetime with timezone -> can be null
+        channel: discord.TextChannel = discord.utils.get(
+            guild.text_channels, id=row["channel"]
+        )  # can be null
+        last: datetime.datetime = row[
+            "last_update"
+        ]  # last status update datetime can be null
 
-        tz_info = await self.bot.db.fetchrow("SELECT * FROM user_tz WHERE userid = $1", mentor.id)
-        if last_tz and tz_info:
-            updated = last_tz
-            current_time = datetime.datetime.now(pytz.timezone(tz_info['tz']))
-            delta = current_time - updated
-        elif last is not None:
+        tz_info = await self.bot.db.fetchrow(
+            "SELECT * FROM user_tz WHERE userid = $1", mentor.id
+        )
+        if last is not None:
             updated = last
             current_time = datetime.datetime.now()
             delta = current_time - updated
@@ -43,17 +44,21 @@ class Stalker(commands.Cog):
         status_emoji = self.bot.emoji_cache[status_to]
 
         embed = discord.Embed(
-            title=f'Status update of {target}',
-            color=self.bot.colors[target.status.name]
+            title=f"Status update of {target}",
+            color=self.bot.colors[target.status.name],
         )
         description = f"{str(self.bot.emoji_cache[status_to])} {status_to}.\n\n"
 
         if delta:
-            description += f"**Was {status_from} for** : {Formatter().natural_delta(delta)} \n"
-        if tz_info:
-            if status_to == 'offline':
+            description += (
+                f"**Was {status_from} for** : {Formatter().natural_delta(delta)} \n"
+            )
+
+        if tz_info and last:
+            tz = pytz.timezone(tz_info["tz"])
+            if status_to == "offline":
                 description += f"**Gone offline** : {Formatter().natural_datetime(datetime.datetime.now((pytz.timezone(tz_info['tz']))))} \n"
-            if status_to == 'online':
+            if status_to == "online":
                 description += f"**Came online** : {Formatter().natural_datetime(datetime.datetime.now((pytz.timezone(tz_info['tz']))))} \n"
 
         embed.description = description
@@ -85,24 +90,18 @@ class Stalker(commands.Cog):
         if after_status in online and before_status not in online:
             if data:
                 for row in data:
-                    await self.notify('offline', 'online', row)
+                    await self.notify("offline", "online", row)
 
         if after_status not in online and before_status in online:
             if data:
                 for row in data:
-                    await self.notify('online', 'offline', row)
+                    await self.notify("online", "offline", row)
 
-        tz_info = await self.bot.db.fetchrow("SELECT * FROM user_tz WHERE userid = $1", data[0]['mentor'])
-        if tz_info:
-            await self.bot.db.execute("UPDATE monitor SET last_update_tz = $1 WHERE mentor = $2",
-                                      datetime.datetime.now(pytz.timezone(tz_info['tz'])),
-                                      data[0]['mentor']
-                                      )
-        else:
-            await self.bot.db.execute("UPDATE monitor SET last_update = $1 WHERE mentor = $2",
-                                      datetime.datetime.now(),
-                                      data[0]['mentor']
-                                      )
+        await self.bot.db.execute(
+            "UPDATE monitor SET last_update = $1 WHERE mentor = $2",
+            datetime.datetime.now(),
+            data[0]["mentor"],
+        )
 
 
 def setup(bot):
